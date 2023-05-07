@@ -1,6 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
 import { logoutController, registerUserController } from "../controllers/users.controller.js";
+import logger from "../utils/winston.js";
 
 const router = Router()
 

@@ -4,6 +4,7 @@ import config from "../config.js"
 import CartManager from "../dao/mongoManagers/CartManager.js"
 import CustomError from "../utils/errors/customError.js"
 import { ErrorsMessage, ErrorsName } from "../utils/errors/errors.enum.js"
+import logger from "../utils/winston.js"
 
 const cartManager = new CartManager()
 
@@ -20,10 +21,12 @@ export default class UsersRepository {
                 const hashNewPassword = await hashPassword(password)
                 const userCart = await cartManager.addCart()
                 const newUser = {...user, cartId: userCart._id, password: hashNewPassword}
+                logger.info(`Usuario creado: ${newUser.email}`)
                 return newUser} else {
                     if (email === "adminCoder@coder.com" & password === config.ADMIN_PASSWORD){
                         const hashNewPassword = await hashPassword(password)
                         const newAdmin = {...user, role: "admin", password: hashNewPassword}
+                        logger.warning(`Admin creado: ${newAdmin.email}`)
                         return newAdmin}
                 }
         }         
@@ -31,6 +34,7 @@ export default class UsersRepository {
 
     async loginUserRep(user) {
             const { email, password } = user;
+            logger.info(`Intento de logueo: ${email}`);
             const usr = await userModel.findOne({ email });
             if(!usr){CustomError.createCustomError({
                 name: ErrorsName.LOGIN_DATA_INCOMPLETE,

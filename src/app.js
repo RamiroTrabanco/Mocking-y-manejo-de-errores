@@ -20,6 +20,9 @@ import CustomError from "./utils/errors/customError.js"
 import "./passport/passportStrategies.js"
 import config from "./config.js"
 import { errorMiddleware } from "./utils/errors/errors.middleware.js"
+import logger from "./utils/winston.js"
+import { createLog } from "./middlewares/winston.middleware.js"
+import loggerTest from "./routes/loggerTest.router.js"
 
 const app = express() 
 const PORT = config.PORT
@@ -68,7 +71,7 @@ app.set('views',__dirname+'/views')
 
 
 
-/* views */
+/* rutas */
 app.use("/products/", viewProds)
 app.use("/carts", viewCart)
 app.use("/api/products", productsRouter)
@@ -78,6 +81,8 @@ app.use("/views", viewsRouter)
 app.use("/api/sessions", sessionsRouter)
 app.use("/chat", chatRouter)
 app.use("/mockingproducts", mockRouter)
+app.use("/loggerTest", loggerTest)
 
 /* error middleware */
 app.use(errorMiddleware)
+app.use(createLog)
